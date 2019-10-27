@@ -1,0 +1,23 @@
+{
+  "name": "express-with-decorators",
+  "version": "1.0.5",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p ./tsconfig.json",
+    "prepublish": "tsc  -p ./tsconfig.json"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.1",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "reflect-metadata": "^0.1.13",
+    "uuid": "^3.3.3"
+  },
+  "keywords": ["typescript", "express", "decorators", "light-weight"]
+}
