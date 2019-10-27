@@ -16,18 +16,19 @@ class GetUsersInterceptor implements RouteInterceptor {
 @Controller('/users')
 class UserController {
 
-@Interceptor(GetUsersInterceptor)
-@Middlewares([
-    (req: Request, res: Response, next: NextFunction) => {
-        console.log('Ran after interceptor.before and before getUsers');
-            next();
-    }
-])
-@Get('/')
+    @Interceptor(GetUsersInterceptor)
+    @Middlewares([
+        (req: Request, res: Response, next: NextFunction) => {
+            console.log('Ran after interceptor.before and before getUsers');
+                next();
+        }
+    ])
+    @Get('/')
     getUsers(request: Request, response: Response, next: NextFunction) {
         console.log('Ran getUsers');
         response.send('Hello world');
     }
+    
 }
 
 class Application extends Server {
