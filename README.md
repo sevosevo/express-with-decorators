@@ -1,5 +1,7 @@
 ## Example application: 
 
+NPM: https://www.npmjs.com/package/express-with-decorators
+
 ```javascript
 import { Server, Get, Interceptor, Controller, RouteInterceptor, Middlewares } from 'express-with-decorators';
 import express, { Request, Response, NextFunction } from 'express';
@@ -28,7 +30,7 @@ class UserController {
         console.log('Ran getUsers');
         response.send('Hello world');
     }
-    
+
 }
 
 class Application extends Server {
