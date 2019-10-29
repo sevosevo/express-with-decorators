@@ -1,16 +1,6 @@
 import 'reflect-metadata';
-import { Server } from './server';
-import { Get, Post, Interceptor, Middlewares, Put, Delete, Patch, Controller, RouteInterceptor } from './decorators';
+export { Server } from './server';
+export { Get, Post, Middlewares, Put, Delete, Patch, RouteInterceptor } from './decorators';
+export { container } from './injector/index';
+export { Singleton, Injectable, Controller, Interceptor } from './decorators/inject';
 
-export {
-    Server,
-    Get,
-    Post,
-    Interceptor,
-    Middlewares,
-    Put,
-    Delete,
-    Patch, 
-    Controller,
-    RouteInterceptor
-};

@@ -3,47 +3,66 @@
 NPM: https://www.npmjs.com/package/express-with-decorators
 
 ```javascript
-import { Server, Get, Interceptor, Controller, RouteInterceptor, Middlewares } from 'express-with-decorators';
+import { Server, Get, Interceptor, Controller, RouteInterceptor, Middlewares, Singleton, Injectable } from 'express-with-decorators';
 import express, { Request, Response, NextFunction } from 'express';
-
-class GetUsersInterceptor implements RouteInterceptor {
-    before = (request: Request, response: Response) => {
-        console.log('Ran first'); //This can be async function
-    };
-    after = (request: Request, response: Response) => {
-        console.log('Ran last') //This can be async function
+// services/UserService.ts
+@Singleton([])
+export class UserService{
+    getAllUsers() {
+        console.log('Doing sql operation...');
+        return 'List of users';
     }
- };
+}
+// interceptors/GetUsersInterceptor.ts
+@Injectable([ UserService ])
+export class GetUsersInterceptor implements RouteInterceptor {
+    public constructor(
+        private readonly userService: UserService
+    ) { }
 
-@Controller('/users')
+    before(req: Request, res: Response) {
+        const users = this.userService.getAllUsers();
+        console.log('Interceptor can access userService in this case ', users);
+        console.log('This will run before middlewares and route closure');
+    }
+    
+    after() {
+        console.log('This will run after all middlewares and after route closure');
+    }
+}
+// controllers/UsersController.ts
+@Controller('/users', [ UserService ])
 class UserController {
-
+    public constructor(
+        private readonly userService: UserService
+    ) { }
+    
     @Interceptor(GetUsersInterceptor)
     @Middlewares([
-        (req: Request, res: Response, next: NextFunction) => {
-            console.log('Ran after interceptor.before and before getUsers');
-                next();
-        }
+        (req: Request, res: Response, next: NextFunction) => { next() }
     ])
     @Get('/')
-    getUsers(request: Request, response: Response, next: NextFunction) {
-        console.log('Ran getUsers');
-        response.send('Hello world');
+    index(request: Request, response: Response, next:NextFunction) {
+        console.log('Getting all users with UserService');
+        const users = this.userService.getAllUsers();
+        response.write('Index page for UsersController');
+        response.write(users);
+        response.end();
     }
 
 }
-
-class Application extends Server {
-    public constructor() {
-        super(express());
-        super.mountController(UserController);
+// core/App.ts
+class ServerApplication extends Server {
+    public constructor(application: Application) {
+        super(application);
     }
-}
+};
+const app = new ServerApplication(express());
+//Mount controllers
+app.mountController(UserController);
 
-const app = new Application();
-
-//Extending Application on Server class will give you Promise based listen method on the server instance
 app.listen(8000)
 .then(() => console.log('Server started...'))
-.catch(err => console.log(err));
+.catch(err => console.error(err));
+
 ```
