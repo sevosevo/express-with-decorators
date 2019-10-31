@@ -5,6 +5,13 @@ NPM: https://www.npmjs.com/package/express-with-decorators
 ```javascript
 import { Server, Get, Interceptor, Controller, RouteInterceptor, Middlewares, Singleton, Injectable } from 'express-with-decorators';
 import express, { Request, Response, NextFunction } from 'express';
+// middlewares/LogMiddleware
+@Singleton([])
+export class LogMiddleware() {
+    use(req: Request, res: Response, next:NextFunction) {
+        next();
+    }
+}
 // services/UserService.ts
 @Singleton([])
 export class UserService{
@@ -41,6 +48,7 @@ class UserController {
     @Middlewares([
         (req: Request, res: Response, next: NextFunction) => { next() }
     ])
+    //or @Middleware([ LogMiddleware ])
     @Get('/')
     index(request: Request, response: Response, next:NextFunction) {
         console.log('Getting all users with UserService');
